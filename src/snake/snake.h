@@ -1,7 +1,9 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-#define MAX_SNAKE_LENGTH 25
+#define MAX_SNAKE_LENGTH 4 // Tamanho máximo da cobra
+#define MATRIX_WIDTH 5
+#define MATRIX_HEIGHT 5
 
 typedef struct
 {
@@ -10,7 +12,7 @@ typedef struct
 } SnakeSegment;
 
 extern int snakeLength;
-extern SnakeSegment snake[MAX_SNAKE_LENGTH];
+extern SnakeSegment snake[MAX_SNAKE_LENGTH]; // Array para armazenar a posição dos segmentos da cobra
 extern int foodX, foodY;
 
 void init_snake();

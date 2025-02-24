@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include "../matriz/matriz.h"
 
+// Definições das variáveis compartilhadas
 int snakeLength = 1;                  // Comprimento inicial da cobra
 SnakeSegment snake[MAX_SNAKE_LENGTH]; // Array para armazenar a posição dos segmentos da cobra
-int foodX = -1, foodY = -1;           // Posição da "balinha"
+int foodX = -1, foodY = -1;           // Posição da comida
 
 void init_snake()
 {
@@ -13,9 +14,11 @@ void init_snake()
     snake[0].y = MATRIX_HEIGHT / 2;
 }
 
-void move_snake(int dx, int dy) {
+void move_snake(int dx, int dy)
+{
     // Desloca todos os segmentos para frente
-    for (int i = snakeLength - 1; i > 0; i--) {
+    for (int i = snakeLength - 1; i > 0; i--)
+    {
         snake[i] = snake[i - 1];
     }
 
@@ -24,10 +27,14 @@ void move_snake(int dx, int dy) {
     snake[0].y += dy;
 
     // Verifica se a cobra ultrapassou os limites da matriz
-    if (snake[0].x < 0) snake[0].x = MATRIX_WIDTH - 1;
-    if (snake[0].x >= MATRIX_WIDTH) snake[0].x = 0;
-    if (snake[0].y < 0) snake[0].y = MATRIX_HEIGHT - 1;
-    if (snake[0].y >= MATRIX_HEIGHT) snake[0].y = 0;
+    if (snake[0].x < 0)
+        snake[0].x = MATRIX_WIDTH - 1;
+    if (snake[0].x >= MATRIX_WIDTH)
+        snake[0].x = 0;
+    if (snake[0].y < 0)
+        snake[0].y = MATRIX_HEIGHT - 1;
+    if (snake[0].y >= MATRIX_HEIGHT)
+        snake[0].y = 0;
 }
 
 int check_collision()
@@ -54,8 +61,11 @@ int check_food()
 {
     if (snake[0].x == foodX && snake[0].y == foodY)
     {
-        // A cobra comeu a balinha, aumenta o tamanho da cobra
-        snakeLength++;
+        // A cobra comeu a comida, aumenta o tamanho da cobra (se não atingiu o tamanho máximo)
+        if (snakeLength < MAX_SNAKE_LENGTH)
+        {
+            snakeLength++;
+        }
         return 1;
     }
     return 0;
@@ -83,26 +93,15 @@ void generate_food()
 
 void update_snake()
 {
+    // Desenha a cobra
     for (int i = 0; i < snakeLength; i++)
     {
         int x = snake[i].x;
         int y = snake[i].y;
-
         uint8_t color_intensity = (uint8_t)(255 * (i / (float)MAX_SNAKE_LENGTH));
-        put_pixel_at(x, y, urgb_u32(0, color_intensity, 0)); // Exemplo de cor verde
+        put_pixel_at(x, y, urgb_u32(0, color_intensity, 0)); // Cor verde
     }
 
-    // Desenha a "balinha"
+    // Desenha a comida
     put_pixel_at(foodX, foodY, urgb_u32(255, 0, 0)); // Cor vermelha
-}
-
-void clear_matrix()
-{
-    for (int y = 0; y < MATRIX_HEIGHT; y++)
-    {
-        for (int x = 0; x < MATRIX_WIDTH; x++)
-        {
-            put_pixel_at(x, y, urgb_u32(0, 0, 0)); // Apaga todos os LEDs
-        }
-    }
 }
