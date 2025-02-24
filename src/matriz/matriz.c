@@ -63,12 +63,12 @@ void update_led_buffer()
         int x = snake[i].x;
         int y = snake[i].y;
         int index = y * MATRIX_WIDTH + x;
-        led_buffer[index] = urgb_u32(0, 65, 0); // Cor verde para a cobra
+        led_buffer[index] = urgb_u32(0, 26, 0); // Cor verde para a cobra
     }
 
     // Desenha a comida
     int foodIndex = foodY * MATRIX_WIDTH + foodX;
-    led_buffer[foodIndex] = urgb_u32(255, 0, 0); // Cor vermelha para a comida
+    led_buffer[foodIndex] = urgb_u32(26, 0, 0); // Cor vermelha para a comida
 }
 
 void set_leds_from_buffer()
