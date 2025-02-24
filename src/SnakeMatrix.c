@@ -11,6 +11,12 @@ PIO pio = pio0;
 int sm = 0;
 uint offset;
 
+// Variáveis para armazenar a direção atual da cobra
+int dx = 0, dy = 0;
+
+// Variável para controlar a velocidade da cobra
+int snake_speed = 500; // Valor inicial do delay (em ms)
+
 int main()
 {
     // Inicializações e configurações
@@ -35,34 +41,28 @@ int main()
         // Envia o estado do buffer para a matriz
         set_leds_from_buffer();
 
-        // Leitura do joystick e atualização da posição
+        // Leitura do joystick e atualização da direção
         int x_value = read_joystick_x();
         int y_value = read_joystick_y();
 
         printf("Joystick X: %d, Y: %d\n", x_value, y_value);
 
-        // Calcula a direção do movimento da cobra
-        int dx = 0, dy = 0;
-
-        // Mapeamento correto dos eixos do joystick
+        // Atualiza a direção da cobra com base no joystick
         if (x_value > 3000)
         { // Movimento para cima
             printf("Movimento para cima\n");
-            printf("Joystick X: %d, Y: %d\n", x_value, y_value);
             dx = 0;
             dy = 1;
         }
         else if (x_value < 1000)
         { // Movimento para baixo
             printf("Movimento para baixo\n");
-            printf("Joystick X: %d, Y: %d\n", x_value, y_value);
             dx = 0;
             dy = -1;
         }
         else if (y_value < 1000)
         { // Movimento para a esquerda
             printf("Movimento para a esquerda\n");
-            printf("Joystick X: %d, Y: %d\n", x_value, y_value);
             dx = 1;
             dy = 0;
         }
@@ -72,8 +72,8 @@ int main()
             dx = -1;
             dy = 0;
         }
-    
-        // Move a cobra
+
+        // Move a cobra na direção atual
         move_snake(dx, dy);
 
         // Verifica se a cobrinha comeu a comida
@@ -81,11 +81,13 @@ int main()
         {
             increase_color_intensity(); // Aumenta a intensidade da cor
             generate_food();            // Gera uma nova comida
-        }
 
-        // Atualiza a cobrinha na matriz de LEDs
-        clear_matrix();
-        update_snake();
+            // Aumenta a velocidade da cobra (diminui o delay)
+            if (snake_speed > 100) // Define um limite mínimo para o delay
+            {
+                snake_speed -= 50; // Diminui o delay em 50 ms
+            }
+        }
 
         // Verifica se a cobra colidiu
         if (check_collision())
@@ -95,9 +97,12 @@ int main()
             init_snake();    // Reinicializa a cobra
             generate_food(); // Gera uma nova comida
             snakeLength = 1; // Reinicia o comprimento da cobra
+            dx = 0;          // Reseta a direção
+            dy = 0;
+            snake_speed = 500; // Reseta a velocidade da cobra
         }
 
-        sleep_ms(200); // Delay para o loop
+        sleep_ms(snake_speed); // Usa o valor atual de snake_speed para o delay
     }
 
     return 0;
