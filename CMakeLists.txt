@@ -40,6 +40,9 @@ add_executable(SnakeMatrix
     src/matriz/matriz.c
     src/joystick/Joystick.c
     src/snake/snake.c
+    src/buttons/buttons.c
+    src/inc/ssd1306.c
+    src/display/display.c
 
 )
 
@@ -57,6 +60,8 @@ target_link_libraries(SnakeMatrix
     pico_stdlib
     hardware_pio
     hardware_adc
+    hardware_spi
+    hardware_i2c
 )
 
 # Add the standard include files to the build
