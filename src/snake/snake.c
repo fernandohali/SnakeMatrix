@@ -4,18 +4,48 @@
 #include "../matriz/matriz.h"
 
 // Definições das variáveis compartilhadas
-int snakeLength = 1;                  // Comprimento inicial da cobra
+int snakeLength = 1;                  // Comprimento inicial da cobra (1 segmento)
+int score = 0;                        // Pontuação inicial
 SnakeSegment snake[MAX_SNAKE_LENGTH]; // Array para armazenar a posição dos segmentos da cobra
 int foodX = -1, foodY = -1;           // Posição da comida
 
 void init_snake()
 {
-    snake[0].x = MATRIX_WIDTH / 2;
-    snake[0].y = MATRIX_HEIGHT / 2;
+    // Gera uma posição aleatória para a cabeça da cobra
+    snake[0].x = rand() % MATRIX_WIDTH;
+    snake[0].y = rand() % MATRIX_HEIGHT;
+
+    // Inicializa o restante da cobra com valores inválidos (serão preenchidos ao mover a cobra)
+    for (int i = 1; i < MAX_SNAKE_LENGTH; i++)
+    {
+        snake[i].x = -1;
+        snake[i].y = -1;
+    }
+
+    // Define o comprimento inicial da cobra
+    snakeLength = 1;
 }
 
 void move_snake(int dx, int dy)
 {
+    // Verifica se a cobra comeu a comida
+    if (check_food())
+    {
+        // Aumenta a pontuação
+        score++;
+
+        // Aumenta o tamanho da cobra (se não atingiu o tamanho máximo)
+        if (snakeLength < MAX_SNAKE_LENGTH)
+        {
+            // Adiciona um novo segmento na posição da cauda da cobra
+            snake[snakeLength] = snake[snakeLength - 1];
+            snakeLength++;
+        }
+
+        // Gera uma nova comida
+        generate_food();
+    }
+
     // Desloca todos os segmentos para frente
     for (int i = snakeLength - 1; i > 0; i--)
     {
@@ -61,11 +91,7 @@ int check_food()
 {
     if (snake[0].x == foodX && snake[0].y == foodY)
     {
-        // A cobra comeu a comida, aumenta o tamanho da cobra (se não atingiu o tamanho máximo)
-        if (snakeLength < MAX_SNAKE_LENGTH)
-        {
-            snakeLength++;
-        }
+        // A cobra comeu a comida
         return 1;
     }
     return 0;
@@ -84,7 +110,7 @@ void generate_food()
         {
             if (snake[i].x == foodX && snake[i].y == foodY)
             {
-                valid = 0;
+                valid = 0; // A comida está em cima da cobra, gere uma nova posição
                 break;
             }
         }

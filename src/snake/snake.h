@@ -12,6 +12,7 @@ typedef struct
 } SnakeSegment;
 
 extern int snakeLength;
+extern int score; // Declaração da variável score como extern
 extern SnakeSegment snake[MAX_SNAKE_LENGTH]; // Array para armazenar a posição dos segmentos da cobra
 extern int foodX, foodY;
 
